@@ -4,15 +4,21 @@
 # --- Manual Steps ---
 # 1. Edit `pyproject.toml` to set the new version (e.g., `version = "1.2.3"` or
 #    `version = "1.2.4-rc1"` for pre-releases).
-# 2. Commit the change and merge it to the `main` branch (From the feature branch or however 
-#    you work).
-# 3. On your local machine, fetch and pull the latest changes from `main` to ensure you're up to date.
-# 4. Use the justfile: `just release` to trigger the process.
+# 2. Commit the change and merge it to the `main` branch (From the feature branch or  
+#    however you work).
+# 3. On your local machine, fetch and pull the latest changes from `main` to ensure
+#    you're up to date.
+# 4. Run the release script, then push the tags to GitHub (conditonal on success):
 
-# --- Automation ---
-# - runs .github/scripts/tag_release.py to create a new tag based on the version in `pyproject.toml`.
-# - Pushes the new tag to github which triggers this workflow file.
-# - Checks that the tag matches the version in `pyproject.toml`.
+#    `bash .github/scripts/release.sh && git push --tags`
+
+# This command will:
+# - Check that you're on the `main` branch and that it's up to date with `origin/main`.
+# - Create a new tag based on the version in `pyproject.toml`.
+# - Pushes the new tag to github which, triggers this workflow file.
+
+# This workflow file then:
+# - Checks that the tag matches the version in `pyproject.toml` on the `main` branch.
 # - Builds the sdist and wheel.
 # - Publishes the package to PyPI using trusted publishing.
 # - Reads the release notes from your CHANGELOG.md.

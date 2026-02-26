@@ -5,6 +5,14 @@ REPO="edward-jazzhands/ci-shared-python"
 BRANCH="main"
 RAW_BASE="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
 
+# ASCII Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+
 # To install jq on Debian/Ubuntu, run:
 # sudo apt install jq
 
@@ -31,7 +39,7 @@ COMMIT_SHA=$(curl -fsSL "https://api.github.com/repos/${REPO}/commits/${BRANCH}"
 TREE=$(curl -fsSL "https://api.github.com/repos/${REPO}/git/trees/${COMMIT_SHA}?recursive=1")
 
 TARGET_DIR="$(pwd)/.github"
-echo "Syncing .github/ into ${TARGET_DIR}"
+echo "Syncing into ${GREEN}${TARGET_DIR}${NC}"
 
 
 # `while IFS= read -r file_path` reads one line at a time from the input.
@@ -61,12 +69,10 @@ while IFS= read -r file_path; do
 	# e.g. /some/dir/.github/workflows/ci.yml → /some/dir/.github/workflows
 	mkdir -p "$(dirname "$local_path")"
 
-	echo "Copying: $local_path"
-
 	if [ -f "$local_path" ]; then
-		echo "Overwriting existing file: $local_path"
+		echo "${CYAN}Overwriting${NC} existing file: $local_path"
 	else
-		echo "Adding new file: $local_path"
+		echo "${YELLOW}Adding${NC} new file: $local_path"
 	fi
 
 	# Construct the raw download URL by joining RAW_BASE with the full file_path

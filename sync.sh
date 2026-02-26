@@ -20,7 +20,7 @@ NC='\033[0m' # No Color
 # This checks if we can print the command path to /dev/null, which is a typical way
 # to check if a program is installed on Unix-like systems.
 if ! command -v jq &>/dev/null; then
-	echo "Error: jq is required but not installed. Install it with 'apt install jq' or 'brew install jq'." >&2
+	printf "Error: jq is required but not installed. Install it with 'apt install jq' or 'brew install jq'.\n" >&2
 	exit 1
 fi
 
@@ -39,7 +39,7 @@ COMMIT_SHA=$(curl -fsSL "https://api.github.com/repos/${REPO}/commits/${BRANCH}"
 TREE=$(curl -fsSL "https://api.github.com/repos/${REPO}/git/trees/${COMMIT_SHA}?recursive=1")
 
 TARGET_DIR="$(pwd)/.github"
-echo "Syncing into ${GREEN}${TARGET_DIR}${NC}"
+printf "Syncing into ${GREEN}${TARGET_DIR}${NC}\n"
 
 
 # `while IFS= read -r file_path` reads one line at a time from the input.
@@ -70,9 +70,9 @@ while IFS= read -r file_path; do
 	mkdir -p "$(dirname "$local_path")"
 
 	if [ -f "$local_path" ]; then
-		echo "${CYAN}Overwriting${NC} existing file: $local_path"
+		printf "${CYAN}Overwriting${NC} existing file: $local_path \n"
 	else
-		echo "${YELLOW}Adding${NC} new file: $local_path"
+		printf "${YELLOW}Adding${NC} new file: $local_path \n"
 	fi
 
 	# Construct the raw download URL by joining RAW_BASE with the full file_path
@@ -92,7 +92,7 @@ done < <(echo "$TREE" | jq -r '.tree[] | select(.type == "blob" and (.path | sta
 #    ├ this thing here
 #    └ This is the while loop's stdin. Note the direction of the redirect symbol.
 
-echo "Done."
+printf "Done.\n"
 
 # == ABOUT `done <` AND THE WHILE LOOP ==
 

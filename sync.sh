@@ -63,6 +63,12 @@ while IFS= read -r file_path; do
 
 	echo "Copying: $local_path"
 
+	if [ -f "$local_path" ]; then
+		echo "Overwriting existing file: $local_path"
+	else
+		echo "Adding new file: $local_path"
+	fi
+
 	# Construct the raw download URL by joining RAW_BASE with the full file_path
 	# (e.g. https://raw.githubusercontent.com/org/repo/main/.github/workflows/ci.yml)
 	# -o writes the response body to local_path instead of stdout.
